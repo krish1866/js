@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library Management System</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0px;
+      padding: 0px; 
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('https://lh3.googleusercontent.com/p/AF1QipNEyZxSwYYpAE-QIj5e0hgNOMLKfMGr2CaF0NUE=s680-w680-h510');
+      background-size:cover
+      ;
+      background-position: 0%;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9); /* translucent white */
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header img {
+      height: 60px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .header h2 {
+      font-size: 26px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    h3 {
+      color: #333;
+      margin-top: 40px;
+    }
+
+    input {
+      padding: 12px;
+      margin: 10px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      padding: 8px 14px;
+      border-radius: 6px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #b02a37;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://d9hhrg4mnvzow.cloudfront.net/admissions.saitm.ac.in/standrews/9cd7c1b5-logo_10ch023000000000000028.png" alt="Library Logo">
+      <h2>Library Management System</h2>
+    </div>
+
+    <!-- Book Addition -->
+    <h3>Add a Book</h3>
+    <input type="text" id="title" placeholder="Book Title" />
+    <input type="text" id="author" placeholder="Author" />
+    <input type="text" id="isbn" placeholder="ISBN" />
+    <button onclick="addBook()">Add Book</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="book-list"></tbody>
+    </table>
+
+    <!-- Book Issue -->
+    <h3>Issue a Book</h3>
+    <input type="text" id="issue-isbn" placeholder="Enter ISBN to Issue" />
+    <input type="text" id="borrower" placeholder="Borrower's Name" />
+    <button onclick="issueBook()">Issue Book</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ISBN</th>
+          <th>Borrower</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="issued-list"></tbody>
+    </table>
+  </div>
+  <div>
+    
+  </div>
+
+  <script>
+    const bookList = document.getElementById("book-list");
+    const issuedList = document.getElementById("issued-list");
+
+    function addBook() {
+      const title = document.getElementById("title").value.trim();
+      const author = document.getElementById("author").value.trim();
+      const isbn = document.getElementById("isbn").value.trim();
+
+      if (!title || !author || !isbn) {
+        alert("Please fill in all book fields.");
+        return;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${title}</td>
+        <td>${author}</td>
+        <td>${isbn}</td>
+        <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+      `;
+      bookList.appendChild(row);
+
+      document.getElementById("title").value = "";
+      document.getElementById("author").value = "";
+      document.getElementById("isbn").value = "";
+    }
+
+    function issueBook() {
+      const isbn = document.getElementById("issue-isbn").value.trim();
+      const borrower = document.getElementById("borrower").value.trim();
+
+      if (!isbn || !borrower) {
+        alert("Please fill in both ISBN and borrower's name.");
+        return;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${isbn}</td>
+        <td>${borrower}</td>
+        <td><button class="delete-btn" onclick="deleteRow(this)">Return</button></td>
+      `;
+      issuedList.appendChild(row);
+
+      document.getElementById("issue-isbn").value = "";
+      document.getElementById("borrower").value = "";
+    }
+
+    function deleteRow(btn) {
+      const row = btn.closest("tr");
+      row.remove();
+    }
+  </script>
+</body>
+</html>
